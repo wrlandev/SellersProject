@@ -15,7 +15,8 @@ namespace SellersProject.Data
         }
 
         public DbSet<DepartmentModel> DepartmentModel { get; set; } = default!;
-        public DbSet<SellerModel> SellerModel { get; set; }
-        public DbSet<SalesRecordModel> SalesRecordModel { get; set; }
+
+        public DbSet<SellersProject.Models.SellerModel> SellerModel { get; set; } = default!;
+        
     }
 }
