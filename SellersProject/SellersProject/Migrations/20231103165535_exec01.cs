@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SellersProject.Migrations
 {
     /// <inheritdoc />
-    public partial class OtherEntities : Migration
+    public partial class exec01 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "DepartmentModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DepartmentModel", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "SellerModel",
                 columns: table => new
@@ -75,6 +88,9 @@ namespace SellersProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "SellerModel");
+
+            migrationBuilder.DropTable(
+                name: "DepartmentModel");
         }
     }
 }

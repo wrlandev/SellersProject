@@ -1,151 +1,113 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using SellersProject.Data;
+﻿using Microsoft.AspNetCore.Mvc;
 using SellersProject.Models;
+using SellersProject.Models.ViewModel;
+using SellersProject.Services;
 
 namespace SellersProject.Controllers
 {
     public class SellersController : Controller
     {
-        private readonly SellersProjectContext _context;
-
-        public SellersController(SellersProjectContext context)
+        private readonly SellerService _sellerService;
+        private readonly DepartmentService _departmentService;
+        public SellersController(SellerService sellerService, DepartmentService departmentService) 
         {
-            _context = context;
+            _sellerService = sellerService;
+            _departmentService = departmentService;
         }
-
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-              return _context.SellerModel != null ? 
-                          View(await _context.SellerModel.ToListAsync()) :
-                          Problem("Entity set 'SellersProjectContext.SellerModel'  is null.");
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.SellerModel == null)
-            {
-                return NotFound();
-            }
-
-            var sellerModel = await _context.SellerModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sellerModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(sellerModel);
+            var list = _sellerService.FindAll();
+            return View(list);
         }
 
         public IActionResult Create()
         {
-            return View();
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel { Departments = departments };
+            return View(viewModel);
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,BirthDate,BaseSalary")] SellerModel sellerModel)
+
+        public IActionResult Create(SellerModel seller)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(sellerModel);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sellerModel);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.SellerModel == null)
-            {
-                return NotFound();
-            }
-
-            var sellerModel = await _context.SellerModel.FindAsync(id);
-            if (sellerModel == null)
-            {
-                return NotFound();
-            }
-            return View(sellerModel);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,BirthDate,BaseSalary")] SellerModel sellerModel)
-        {
-            if (id != sellerModel.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(sellerModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!SellerModelExists(sellerModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(sellerModel);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null || _context.SellerModel == null)
-            {
-                return NotFound();
-            }
-
-            var sellerModel = await _context.SellerModel
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (sellerModel == null)
-            {
-                return NotFound();
-            }
-
-            return View(sellerModel);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            if (_context.SellerModel == null)
-            {
-                return Problem("Entity set 'SellersProjectContext.SellerModel'  is null.");
-            }
-            var sellerModel = await _context.SellerModel.FindAsync(id);
-            if (sellerModel != null)
-            {
-                _context.SellerModel.Remove(sellerModel);
-            }
-            
-            await _context.SaveChangesAsync();
+            _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SellerModelExists(int id)
+        public IActionResult Delete(int? id)
         {
-          return (_context.SellerModel?.Any(e => e.Id == id)).GetValueOrDefault();
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FindById(id.Value);
+
+            if(seller == null)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FindById(id.Value);
+
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+        public IActionResult Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FindById(id.Value);
+
+            if (seller == null)
+            {
+                return NotFound();
+            }
+
+            List<DepartmentModel> departments = _departmentService.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, SellerModel seller)
+        {
+            if(id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            _sellerService.Update(seller);
+            return RedirectToAction(nameof(Index));
         }
     }
 }

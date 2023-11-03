@@ -12,8 +12,8 @@ using SellersProject.Data;
 namespace SellersProject.Migrations
 {
     [DbContext(typeof(SellersProjectContext))]
-    [Migration("20231103011004_OtherEntities")]
-    partial class OtherEntities
+    [Migration("20231103165535_exec01")]
+    partial class exec01
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
