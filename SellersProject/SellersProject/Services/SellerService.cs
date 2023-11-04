@@ -12,33 +12,33 @@ namespace SellersProject.Services
             _context = context;
         }
 
-        public List<SellerModel> FindAll()
+        public async Task<List<SellerModel>> FindAllAsync()
         {
-            return _context.SellerModel.ToList();
+            return await _context.SellerModel.ToListAsync();
         }
 
-        public void Insert(SellerModel seller)
+        public async Task InsertAsync(SellerModel seller)
         {
             _context.Add(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public SellerModel FindById(int id)
+        public async Task<SellerModel> FindByIdAsync(int id)
         {
-            return _context.SellerModel.Include(seller => seller.Department).FirstOrDefault(obj => obj.Id == id);
+            return await _context.SellerModel.Include(seller => seller.Department).FirstOrDefaultAsync(seller => seller.Id == id);
         }
 
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var seller = _context.SellerModel.Find(id);
+            var seller = await _context.SellerModel.FindAsync(id);
             _context.SellerModel.Remove(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(SellerModel seller)
+        public async Task UpdateAsync(SellerModel seller)
         {
             _context.Update(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
     }
 }

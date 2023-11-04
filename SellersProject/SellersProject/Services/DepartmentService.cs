@@ -1,4 +1,5 @@
-﻿using SellersProject.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SellersProject.Data;
 using SellersProject.Models;
 
 namespace SellersProject.Services
@@ -10,9 +11,9 @@ namespace SellersProject.Services
         {
             _context = context;
         }
-        public List<DepartmentModel> FindAll()
+        public async Task<List<DepartmentModel>> FindAllAsync()
         {
-            return _context.DepartmentModel.OrderBy(x => x.Name).ToList();
+            return await _context.DepartmentModel.OrderBy(x => x.Name).ToListAsync();
         }
     }
 }
