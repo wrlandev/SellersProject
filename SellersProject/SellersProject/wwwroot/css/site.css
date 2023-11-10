@@ -25,6 +25,8 @@ body {
     border: 1px solid black;
     padding: 20px;
     color: black;
+
+    text-align: center;
 }
 .table_overflow-x{
     overflow-x: auto;
