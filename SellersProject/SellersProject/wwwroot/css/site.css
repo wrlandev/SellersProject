@@ -26,6 +26,6 @@ body {
     padding: 20px;
     color: black;
 }
-.table_seller{
+.table_overflow-x{
     overflow-x: auto;
 }

@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create" type="button" class="btn btn-primary">Create New</a>
 </p>
+<div class="table_overflow-x">
 <table class="table">
     <thead>
         <tr>
@@ -26,10 +27,10 @@
             </td>
             <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" type="button" class="btn btn-outline-warning btn-sm">Edit</a>
-                    <a asp-action="Details" asp-route-id="@item.Id" type="button" class="btn btn-outline-info btn-sm">Details</a>
                     <a asp-action="Delete" asp-route-id="@item.Id" type="button" class="btn btn-outline-danger btn-sm">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>

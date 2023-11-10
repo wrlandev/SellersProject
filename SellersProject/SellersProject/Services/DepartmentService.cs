@@ -15,5 +15,28 @@ namespace SellersProject.Services
         {
             return await _context.DepartmentModel.OrderBy(x => x.Name).ToListAsync();
         }
+        public async Task InsertAsync(DepartmentModel department)
+        {
+            _context.Add(department);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<DepartmentModel> FindByIdAsync(int id)
+        {
+            return await _context.DepartmentModel.Include(department => department.Sellers).FirstOrDefaultAsync(department => department.Id == id);
+        }
+
+        public async Task RemoveAsync(int id)
+        {
+            var department = await _context.DepartmentModel.FindAsync(id);
+            _context.DepartmentModel.Remove(department);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(DepartmentModel department)
+        {
+            _context.Update(department);
+            await _context.SaveChangesAsync();
+        }
     }
 }

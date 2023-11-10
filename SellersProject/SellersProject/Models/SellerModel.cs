@@ -6,9 +6,11 @@ namespace SellersProject.Models
     {
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        [StringLength(50, MinimumLength = 3, ErrorMessage = "The user name must be between 3 and 50 characters")]
+		public string Name { get; set; }
 
-        [DataType(DataType.EmailAddress)]
+		[StringLength(50, MinimumLength = 3, ErrorMessage = "The Email must be between 3 and 50 characters")]
+		[DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
         [Display(Name = "Birth Date")]
@@ -17,6 +19,7 @@ namespace SellersProject.Models
 
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Range(100,1000000, ErrorMessage = "The base salary must be between one hundred and one million")]
         public double BaseSalary { get; set; }
 
         public DepartmentModel Department { get; set; }
