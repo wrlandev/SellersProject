@@ -2,6 +2,7 @@
 using SellersProject.Models;
 using SellersProject.Models.ViewModel;
 using SellersProject.Services;
+using ClosedXML.Excel;
 
 namespace SellersProject.Controllers
 {
@@ -108,6 +109,22 @@ namespace SellersProject.Controllers
 
             await _sellerService.UpdateAsync(seller);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Export()
+        {
+            var dados = _sellerService.GetDados();
+
+            using (XLWorkbook workbook = new XLWorkbook())
+            {
+                workbook.AddWorksheet(dados, "Seller Details");
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    workbook.SaveAs(ms);
+                    return File(ms.ToArray(), "application/vnd.openxmlformats-officedocument.spredsheetml.sheet", "Sellers.xls");
+                }
+            }
         }
     }
 }

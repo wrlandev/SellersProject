@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SellersProject.Data;
 using SellersProject.Models;
+using System.Data;
 
 namespace SellersProject.Services
 {
@@ -39,6 +40,31 @@ namespace SellersProject.Services
         {
             _context.Update(seller);
             await _context.SaveChangesAsync();
+        }
+
+        public DataTable GetDados()
+        {
+            DataTable dataTable = new DataTable();
+
+            dataTable.TableName = "Seller Details";
+
+            dataTable.Columns.Add("Name", typeof(string));
+            dataTable.Columns.Add("Email", typeof(string));
+            dataTable.Columns.Add("Birth Date", typeof(DateTime));
+            dataTable.Columns.Add("Base Salary", typeof(double));
+            dataTable.Columns.Add("Department", typeof(int));
+
+            var dados = _context.SellerModel.ToList();
+
+            if (dados.Count > 0)
+            {
+                dados.ForEach(item =>
+                {
+                    dataTable.Rows.Add(item.Name, item.Email, item.BirthDate, item.BaseSalary, item.Department);
+                });
+            }
+
+            return dataTable;
         }
     }
 }
